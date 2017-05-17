@@ -93,8 +93,11 @@ export default {
     }
   },
   methods: {
+    logoyt() {
+      this.$store.dispatch('userLogout')
+    },
     toggleNav() {
-      this.showNav = !showNav
+      this.showNav = !this.showNav
     }
   }
 }

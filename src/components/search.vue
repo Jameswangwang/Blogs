@@ -1,9 +1,9 @@
 <template>
-  <div class='banner_dairy' id='banner_dairy'>
-    <div class='input-group banner_search'>
-      <input type='text' placeholder='SEARCH' class='form-control' v-model.trim='keyword' @keyup.enter=''>
-      <span class='input-group-addon search_btn' @click=''>
-        <i class='iconfont icon-search addon_icon'></i>
+  <div class="banner_dairy" id="banner_dairy">
+    <div class="input-group banner_search">
+      <input type="text" v-model.trim="keyword" placeholder="SEARCH" class="form-control" @keyup.enter="searchBtn">
+      <span class="input-group-addon search_btn" @click="searchBtn">
+        <i class="iconfont icon-search addon_icon"></i>
       </span>
     </div>
   </div>
@@ -11,6 +11,7 @@
 
 <script>
 import Sketch from '../assets/js/color.js'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -18,7 +19,19 @@ export default {
       keyword: ''
     }
   },
+  computed: {
+    ...mapGetters({
+      getArticleList: 'getArticleList'
+    })
+  },
+  methods: {
+    searchBtn() {
+      this.$emit('keyword-change', this.keyword)
+    }
+  },
   mounted() {
+    this.keyword = this.getArticleList.keyword
+
     var MAX_PARTICLES = 200
     var COLOURS = ['#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FF4E50', '#F9D423']
 
@@ -185,10 +198,10 @@ export default {
           colorIndices[1] = (colorIndices[1] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length
           colorIndices[3] = (colorIndices[3] + Math.floor(1 + Math.random() * (colors.length - 1))) % colors.length
         }
-      }, 20)
+      }, 10)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     Sketch.stop()
     clearInterval(this.updateGradient)
   }
@@ -196,10 +209,20 @@ export default {
 </script>
 
 <style>
+.sketch {
+  width: 100%;
+  height: 360px;
+}
+
+.sketch::selection {
+  background: rgba(255, 255, 255, 0);
+}
+
 .banner_dairy {
   height: 360px;
   position: relative;
 }
+
 .banner_dairy .banner_search {
   position: absolute;
   top: 50%;
@@ -211,14 +234,8 @@ export default {
 .banner_search input {
   background: rgba(255, 255, 255, 0.9);
 }
+
 .search_btn {
   cursor: pointer;
-}
-.sketch{
-  width:100%;
-  height:360px;
-}
-.sketch::selection {
-  background:rgba(255,255,255,0);
 }
 </style>
